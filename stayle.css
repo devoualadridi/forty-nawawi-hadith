@@ -993,3 +993,275 @@ width:100%;
 }
 
 }
+/*=========================================
+RESPONSIVE
+=========================================*/
+
+@media(max-width:992px){
+
+.hero{
+    flex-direction:column-reverse;
+    text-align:center;
+    padding-top:140px;
+    gap:35px;
+}
+
+.hero-buttons{
+    justify-content:center;
+}
+
+.hero h1{
+    font-size:50px;
+}
+
+.hero-text{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.circle{
+    width:320px;
+    height:320px;
+}
+
+.hero-icon{
+    font-size:130px;
+}
+
+.stats{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.timeline{
+    flex-direction:column;
+    gap:25px;
+}
+
+.line{
+    display:none;
+}
+
+}
+
+@media(max-width:768px){
+
+.navbar{
+    height:70px;
+}
+
+.logo{
+    font-size:20px;
+}
+
+.logo i{
+    font-size:24px;
+}
+
+.nav-links{
+    display:none;
+}
+
+.nav-icons button{
+    width:40px;
+    height:40px;
+}
+
+.hero{
+    padding-top:110px;
+    gap:25px;
+}
+
+.hero h1{
+    font-size:38px;
+    line-height:1.3;
+}
+
+.hero-text{
+    font-size:17px;
+}
+
+.circle{
+    width:250px;
+    height:250px;
+}
+
+.hero-icon{
+    font-size:100px;
+}
+
+.hero-buttons{
+    flex-direction:column;
+    width:100%;
+    gap:15px;
+}
+
+.btn{
+    text-align:center;
+    padding:14px 25px;
+}
+
+.stats{
+    grid-template-columns:1fr;
+    gap:18px;
+    margin:50px auto;
+}
+
+.card{
+    padding:25px;
+}
+
+.card h2{
+    font-size:36px;
+}
+
+.why{
+    margin:80px auto;
+}
+
+.section-title h2{
+    font-size:30px;
+}
+
+.section-title p{
+    padding:0 10px;
+}
+
+.why-grid{
+    grid-template-columns:1fr;
+}
+
+.journey{
+    margin:90px auto;
+}
+
+.step-circle{
+    width:65px;
+    height:65px;
+    font-size:24px;
+}
+
+.cta{
+    margin:90px auto;
+}
+
+.cta-box{
+    padding:40px 20px;
+    border-radius:20px;
+}
+
+.cta-box h2{
+    font-size:30px;
+}
+
+.profile-drawer{
+    width:100%;
+    right:-100%;
+}
+
+footer{
+    margin-top:90px;
+    padding:50px 6%;
+}
+
+.footer-container{
+    text-align:center;
+    gap:30px;
+}
+
+.socials{
+    justify-content:center;
+}
+
+}
+
+@media(max-width:480px){
+
+.navbar{
+    width:92%;
+}
+
+.hero{
+    width:92%;
+    padding-top:100px;
+}
+
+.hero h1{
+    font-size:30px;
+}
+
+.small-title{
+    font-size:14px;
+}
+
+.hero-text{
+    font-size:15px;
+}
+
+.circle{
+    width:200px;
+    height:200px;
+}
+
+.hero-icon{
+    font-size:80px;
+}
+
+.btn{
+    padding:12px 20px;
+    font-size:15px;
+}
+
+.stats{
+    width:92%;
+}
+
+.card h2{
+    font-size:30px;
+}
+
+.card p{
+    font-size:14px;
+}
+
+.why{
+    width:92%;
+}
+
+.section-title h2{
+    font-size:26px;
+}
+
+.why-card{
+    padding:25px 20px;
+}
+
+.why-card i{
+    font-size:36px;
+}
+
+.journey{
+    width:92%;
+}
+
+.cta{
+    width:92%;
+}
+
+.cta-box h2{
+    font-size:24px;
+}
+
+.cta-box p{
+    font-size:15px;
+}
+
+.drawer-header img{
+    width:90px;
+    height:90px;
+}
+
+.footer-container{
+    grid-template-columns:1fr;
+}
+
+}
