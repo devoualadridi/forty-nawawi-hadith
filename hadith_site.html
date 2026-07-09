@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الأربعون النووية | موسوعة تفاعلية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep:#1c3324;
+    --forest:#2d4a34;
+    --sage:#5c8a63;
+    --sage-light:#8fb597;
+    --gold:#b8955a;
+    --gold-soft:#e3cd9d;
+    --paper:#f3f6ee;
+    --paper-2:#eaf0e2;
+    --card:#ffffff;
+    --ink:#1a2b1f;
+    --ink-soft:#4a5c4f;
+    --line:#dde6d5;
+    --shadow: 0 10px 30px -12px rgba(28,51,36,0.18);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 100% -10%, #eef3e5 0%, transparent 60%),
+      radial-gradient(1000px 500px at -10% 10%, #eaf1e1 0%, transparent 55%),
+      var(--paper);
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    line-height:1.9;
+  }
+  h1,h2,h3, .arabic-display{font-family:'Amiri', serif;}
+
+  /* ---------- decorative geometric motif (signature element) ---------- */
+  .motif-divider{
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    margin:0 auto;
+  }
+  .motif-divider svg{ width:220px; height:24px; }
+  .motif-divider path{ fill:none; stroke:var(--gold); stroke-width:1.4; }
+  .motif-divider .diamond{ fill:var(--gold); }
+
+  @keyframes floatSlow{
+    0%,100%{ transform:translateY(0px) rotate(0deg); }
+    50%{ transform:translateY(-10px) rotate(6deg); }
+  }
+  @keyframes shimmer{
+    0%{ background-position:-200% 0; }
+    100%{ background-position:200% 0; }
+  }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .reveal{ opacity:0; }
+  .reveal.in{ animation:fadeUp .7s ease forwards; }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:linear-gradient(180deg, rgba(28,51,36,0.97), rgba(28,51,36,0.93));
+    backdrop-filter:blur(6px);
+    color:#f4f7ef;
+    padding:14px 20px;
+    display:flex; align-items:center; justify-content:space-between;
+    box-shadow:var(--shadow);
+  }
+  header .brand{ display:flex; align-items:center; gap:10px; }
+  header .brand-seal{
+    width:38px; height:38px; border-radius:50%;
+    background:conic-gradient(from 180deg, var(--gold), var(--sage-light), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Amiri',serif; font-weight:700; color:var(--deep); font-size:14px;
+    animation:floatSlow 6s ease-in-out infinite;
+  }
+  header h1{ margin:0; font-size:1.3rem; letter-spacing:.5px; }
+  header .sub{ font-size:.72rem; color:var(--sage-light); font-weight:400; }
+
+  .menu-btn{
+    width:42px; height:42px; border-radius:12px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;
+    cursor:pointer;
+  }
+  .menu-btn span{ width:20px; height:2px; background:#f4f7ef; border-radius:2px; transition:.25s; }
+  .menu-btn:hover span{ background:var(--gold-soft); }
+
+  /* ---------- hero (immersive, canvas + svg mandala, full interactive) ---------- */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    padding:110px 20px 70px;
+    text-align:center;
+    overflow:hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:
+      radial-gradient(900px 500px at 50% -10%, rgba(184,149,90,0.14), transparent 60%),
+      linear-gradient(160deg, #142a1c 0%, #1c3324 45%, #23412c 100%);
+    color:#eef3e8;
+  }
+  #heroCanvas{
+    position:absolute; inset:0; width:100%; height:100%; display:block; z-index:1;
+    pointer-events:none;
+  }
+  .mandala-wrap{
+    position:absolute; top:50%; left:50%; width:min(720px,140vw); height:min(720px,140vw);
+    transform:translate(-50%,-50%); z-index:1; pointer-events:none;
+    opacity:.55; will-change:transform;
+  }
+  .mandala-wrap svg{ width:100%; height:100%; }
+  .mandala-wrap path, .mandala-wrap circle{ stroke:var(--gold-soft); }
+
+  .hero-inner{
+    position:relative; z-index:3; max-width:720px;
+    animation:heroEnter 1s .1s ease both;
+  }
+  @keyframes heroEnter{
+    from{ opacity:0; transform:translateY(26px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .mandala-wrap{ transition:transform .35s ease; }
+  .mandala-spin{ width:100%; height:100%; animation:spinSlow 130s linear infinite; }
+  @keyframes spinSlow{ to{ transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce){
+    .mandala-spin{ animation:none; }
+    .hero-inner{ animation:none; opacity:1; }
+  }
+
+  .hero .eyebrow{
+    display:inline-block; padding:7px 18px; border-radius:999px;
+    background:rgba(255,255,255,0.07); border:1px solid rgba(227,205,157,0.35);
+    backdrop-filter:blur(4px);
+    color:var(--gold-soft); font-size:.78rem; font-weight:700; letter-spacing:.5px;
+    margin-bottom:20px;
+  }
+  .hero h2{
+    font-size:clamp(1.8rem, 5.5vw, 2.9rem);
+    color:#fbfaf4; margin:0 0 14px; text-shadow:0 6px 30px rgba(0,0,0,0.35);
+  }
+  .typewriter-line{
+    font-family:'Amiri',serif; font-size:clamp(1.2rem,4vw,1.7rem);
+    color:var(--gold-soft); min-height:1.6em; margin-bottom:14px;
+  }
+  .typewriter-line .cursor{
+    display:inline-block; width:2px; margin-inline-start:2px;
+    background:var(--gold-soft); animation:blink 1s step-end infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .hero p.lead{ max-width:600px; margin:0 auto; color:#d7e2d0; font-size:clamp(.92rem,2.4vw,1.05rem); }
+
+  .stats-row{
+    display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:34px;
+  }
+  .stat-chip{
+    background:rgba(255,255,255,0.06); border:1px solid rgba(227,205,157,0.25);
+    backdrop-filter:blur(6px);
+    border-radius:16px; padding:14px 24px; min-width:110px;
+    text-align:center; transition:transform .25s ease;
+  }
+  .stat-chip:hover{ transform:translateY(-4px); }
+  .stat-chip .num{ font-family:'Amiri',serif; font-size:1.8rem; color:var(--gold-soft); font-weight:700; }
+  .stat-chip .label{ font-size:.72rem; color:#cdd9c6; }
+
+  #progressBar{
+    max-width:420px; width:100%; margin:22px auto 0; height:8px; border-radius:99px;
+    background:rgba(255,255,255,0.1); overflow:hidden; border:1px solid rgba(227,205,157,0.25);
+  }
+  #progressBar > div{
+    height:100%; width:0%;
+    background:linear-gradient(90deg, var(--sage-light), var(--gold));
+    background-size:200% 100%;
+    animation:shimmer 3s linear infinite;
+    transition:width .5s ease;
+  }
+
+  .scroll-cue{
+    position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+    z-index:3; display:flex; flex-direction:column; align-items:center; gap:6px;
+    color:#cdd9c6; font-size:.72rem; cursor:pointer; background:none; border:none;
+    font-family:'Tajawal',sans-serif;
+  }
+  .scroll-cue svg{ animation:bounceDown 1.8s ease-in-out infinite; }
+  @keyframes bounceDown{
+    0%,100%{ transform:translateY(0); opacity:.6; }
+    50%{ transform:translateY(8px); opacity:1; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .scroll-cue svg{ animation:none; }
+    #progressBar > div{ animation:none; }
+  }
+
+  /* ---------- search + index panel ---------- */
+  .toolbar{
+    max-width:900px; margin:0 auto; padding:0 20px 10px;
+    display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+  }
+  .search-box{
+    display:flex; align-items:center; gap:8px;
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:8px 14px; box-shadow:var(--shadow);
+  }
+  .search-box input{
+    border:none; outline:none; background:transparent; width:150px;
+    font-family:'Tajawal',sans-serif; font-size:.95rem; color:var(--ink);
+  }
+  .search-box button, .filter-btn{
+    border:none; cursor:pointer; border-radius:12px; padding:9px 16px;
+    background:var(--forest); color:#fff; font-weight:700; font-size:.85rem;
+    transition:.2s;
+  }
+  .search-box button:hover, .filter-btn:hover{ background:var(--deep); }
+
+  .index-panel{
+    position:fixed; inset:0 0 0 auto; width:min(340px, 88vw); height:100%;
+    background:var(--card); z-index:80; box-shadow:-20px 0 40px rgba(0,0,0,0.15);
+    transform:translateX(100%); transition:transform .35s ease;
+    overflow-y:auto; padding:20px;
+    border-left:1px solid var(--line);
+  }
+  .index-panel.open{ transform:translateX(0); }
+  .index-panel h3{ color:var(--forest); margin-top:0; }
+  .index-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:14px;
+  }
+  .index-grid a{
+    background:var(--paper-2); color:var(--forest); text-align:center;
+    border-radius:10px; padding:10px 4px; font-weight:700; font-size:.85rem;
+    text-decoration:none; border:1px solid var(--line); transition:.2s;
+  }
+  .index-grid a:hover{ background:var(--sage); color:#fff; }
+  .index-grid a.done{ background:var(--gold-soft); border-color:var(--gold); }
+  .overlay{
+    position:fixed; inset:0; background:rgba(20,30,22,0.35); z-index:70;
+    opacity:0; pointer-events:none; transition:opacity .3s ease;
+  }
+  .overlay.show{ opacity:1; pointer-events:auto; }
+
+  /* ---------- main list ---------- */
+  main{ max-width:900px; margin:0 auto; padding:30px 18px 80px; }
+
+  .hadith-card{
+    background:var(--card); border:1px solid var(--line); border-radius:20px;
+    margin-bottom:22px; overflow:hidden; box-shadow:var(--shadow);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .hadith-card:hover{ transform:translateY(-3px); }
+
+  .card-head{
+    display:flex; align-items:center; gap:14px; padding:18px 20px;
+    cursor:pointer; user-select:none;
+    background:linear-gradient(90deg, var(--paper-2), transparent);
+  }
+  .card-head .badge{
+    min-width:46px; height:46px; border-radius:14px;
+    background:linear-gradient(160deg, var(--forest), var(--sage));
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-family:'Amiri',serif; font-weight:700; font-size:1.15rem;
+    flex-shrink:0;
+  }
+  .card-head .title{ flex:1; }
+  .card-head .title h3{ margin:0; font-size:1.1rem; color:var(--deep); }
+  .card-head .title span{ font-size:.78rem; color:var(--ink-soft); }
+  .card-head .mark{
+    width:26px; height:26px; border-radius:50%; border:2px solid var(--sage);
+    display:flex; align-items:center; justify-content:center; font-size:.8rem;
+    color:var(--sage); flex-shrink:0; transition:.2s;
+  }
+  .card-head .mark.done{ background:var(--gold); border-color:var(--gold); color:#fff; }
+  .chevron{ transition:transform .3s ease; color:var(--sage); }
+  .hadith-card.open .chevron{ transform:rotate(180deg); }
+
+  .card-body{
+    max-height:0; overflow:hidden; transition:max-height .4s ease;
+  }
+  .card-body-inner{ padding:0 20px 20px; }
+
+  .hadith-text{
+    background:var(--paper); border-right:4px solid var(--gold);
+    border-radius:12px; padding:18px; font-family:'Amiri',serif;
+    font-size:1.18rem; color:var(--deep); line-height:2.1;
+  }
+  .narrator-line{
+    margin-top:10px; font-size:.85rem; color:var(--ink-soft); font-weight:700;
+  }
+
+  .tabs{
+    display:flex; gap:6px; margin:16px 0 10px;
+    overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; padding-bottom:4px;
+  }
+  .tabs::-webkit-scrollbar{ display:none; }
+  .tab-btn{
+    border:1px solid var(--line); background:var(--paper-2); color:var(--forest);
+    padding:8px 14px; border-radius:999px; font-size:.8rem; font-weight:700;
+    cursor:pointer; transition:.2s; flex:0 0 auto; white-space:nowrap;
+    min-height:38px;
+  }
+  .tab-btn.active{ background:var(--forest); color:#fff; border-color:var(--forest); }
+  .tab-panel{ display:none; animation:fadeUp .4s ease; }
+  .tab-panel.active{ display:block; }
+  .tab-panel .placeholder{
+    color:var(--ink-soft); font-size:.9rem; background:var(--paper);
+    border:1px dashed var(--line); border-radius:12px; padding:14px 16px;
+  }
+  .tab-panel ul{ margin:0; padding-inline-start:22px; }
+  .tab-panel li{ margin-bottom:6px; }
+
+  .audio-row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  audio{ width:100%; max-width:320px; }
+
+  .quiz-q{
+    background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    padding:14px 16px; margin-bottom:10px;
+  }
+  .quiz-opts button{
+    display:block; width:100%; text-align:right; margin-top:8px;
+    border:1px solid var(--line); background:#fff; border-radius:10px;
+    padding:8px 12px; cursor:pointer; font-family:'Tajawal',sans-serif;
+  }
+  .quiz-opts button.correct{ background:#dff2e1; border-color:var(--sage); }
+  .quiz-opts button.wrong{ background:#fbe3e0; border-color:#d98b83; }
+
+  footer{
+    text-align:center; padding:26px; color:var(--ink-soft); font-size:.85rem;
+    border-top:1px solid var(--line); background:var(--paper-2);
+  }
+
+  #toTop{
+    position:fixed; bottom:22px; left:22px; width:44px; height:44px;
+    border-radius:50%; background:var(--forest); color:#fff; border:none;
+    box-shadow:var(--shadow); cursor:pointer; opacity:0; pointer-events:none;
+    transition:.3s;
+  }
+  #toTop.show{ opacity:1; pointer-events:auto; }
+
+  @media (max-width:768px){
+    header{ padding:12px 14px; }
+    header h1{ font-size:1.05rem; }
+    header .sub{ font-size:.65rem; }
+    .hero{ padding:100px 16px 60px; }
+    .stat-chip{ padding:12px 16px; min-width:96px; }
+    .card-head{ padding:14px; gap:10px; }
+    .card-head .badge{ min-width:38px; height:38px; font-size:1rem; }
+    .card-head .title h3{ font-size:1rem; }
+    .card-body-inner{ padding:0 14px 16px; }
+    .hadith-text{ font-size:1.02rem; padding:14px; line-height:1.95; }
+  }
+  @media (max-width:560px){
+    .index-grid{ grid-template-columns:repeat(3,1fr); }
+    .toolbar{ flex-direction:column; align-items:stretch; }
+    .search-box{ justify-content:space-between; }
+    .search-box input{ width:auto; flex:1; }
+    .stats-row{ gap:10px; }
+    .scroll-cue{ bottom:14px; }
+  }
+  @media (max-width:400px){
+    .hero h2{ font-size:1.55rem; }
+    .stat-chip{ min-width:80px; padding:10px 12px; }
+    .stat-chip .num{ font-size:1.4rem; }
+  }
+  /* comfortable touch targets everywhere */
+  @media (pointer:coarse){
+    .tab-btn{ padding:9px 15px; }
+    .menu-btn, #toTop{ min-width:44px; min-height:44px; }
+    .mark{ padding:8px; }
+    .search-box button, .filter-btn{ padding:11px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay"></div>
+
+<header>
+  <div class="brand">
+    
+    
+  </div>
+  <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
+</header>
+
+<section class="hero" id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="mandala-wrap" id="mandalaWrap"><div class="mandala-spin" id="mandalaSpin"></div></div>
+
+  <div class="hero-inner">
+    <span class="eyebrow">للإمام يحيى بن شرف النووي رحمه الله</span>
+    <h2 class="arabic-display">أربعون حديثًا نبويًا جامعة لأصول الدين</h2>
+    <div class="typewriter-line"><span id="typeTarget"></span><span class="cursor">&nbsp;</span></div>
+    <p class="lead">اقرأ، افهم، وطبّق. كل حديث معه شرح، فوائد، اختبار قصير، وعمل عملي لأسبوع كامل — رحلة تفاعلية بين النص والحياة.</p>
+
+    <div class="motif-divider">
+      <svg viewBox="0 0 220 24"><path d="M0 12 H90"/><polygon class="diamond" points="110,4 118,12 110,20 102,12"/><path d="M130 12 H220"/></svg>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-chip"><div class="num" data-count="42">0</div><div class="label">حديثًا</div></div>
+      <div class="stat-chip"><div class="num" id="readCount" data-count-live>0</div><div class="label">تمّت قراءته</div></div>
+      <div class="stat-chip"><div class="num" data-count="7">0</div><div class="label">أيام لكل عمل أسبوعي</div></div>
+    </div>
+    <div id="progressBar"><div id="progressFill"></div></div>
+
+    <div class="toolbar" style="margin-top:26px;">
+      <div class="search-box">
+        <input type="number" id="searchInput" placeholder="رقم الحديث (1-42)">
+        <button onclick="jumpToHadith()">بحث</button>
+      </div>
+      <button class="filter-btn" onclick="toggleIndex()">فهرس الأحاديث</button>
+    </div>
+  </div>
+
+  <button class="scroll-cue" onclick="document.getElementById('mainList').scrollIntoView({behavior:'smooth'})" aria-label="مرّر للأسفل">
+    مرّر لتبدأ الرحلة
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+</section>
+
+<div class="index-panel" id="indexPanel">
+  <h3>فهرس الأحاديث</h3>
+  <div class="index-grid" id="indexGrid"></div>
+</div>
+
+<main id="mainList"></main>
+
+<footer>
+  ٢٠٢٥ © الأربعون النووية — موقع تعليمي غير هادف للربح، أُعدّ للنفع والتذكير.
+</footer>
+
+<button id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+/* ============ DATA ============
+   كل عنصر يحتوي النص الكامل والراوي (جاهزَين)، وبقية الحقول فارغة
+   لتُملأ لاحقًا (شرح، فوائد، عبر، كلمات، تطبيق، اختبار، عمل أسبوعي، صوت، مراجع) */
+const hadiths = [
+{n:1, text:`إِنَّمَا الأَعْمَالُ بالنِّيَّاتِ وإِنَّمَا لِكُلِّ امْرِئٍ ما نَوَى، فَمَنْ كَانَتْ هِجْرَتُهُ إِلَى اللهِ وَرَسُولِهِ فَهِجْرَتُهُ إِلى اللهِ وَرَسُولِهِ، وَمَنْ كَانَتْ هِجْرَتُهُ لِدُنْيَا يُصِيبُهَا أَو امْرَأَةٍ يَنْكِحُهَا فَهِجْرَتُهُ إِلَى مَا هَاجَرَ إِلَيْهِ.`, narrator:"رواه البخاري ومسلم", raw:"عن أمير المؤمنين أبي حفص عمر بن الخطاب رضي الله عنه"},
+{n:2, text:`الإِسْلاَمُ أَنْ تَشْهَدَ أَنْ لاَ إِلَهَ إِلاَّ اللهُ وَأَنَّ مُحَمَّدًا رَسُولُ اللهِ، وَتُقِيمَ الصَّلاَةَ، وَتُؤْتِيَ الزَّكَاةَ، وَتَصُومَ رَمَضَانَ، وَتَحُجَّ الْبَيْتَ إِنِ اسْتَطَعْتَ إِليْهِ سَبِيلاً. والإيمانُ: أَنْ تُؤْمِنَ بِاللهِ وَمَلاَئِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ وَاليَوْمِ الآخِرِ، وَتُؤْمِنَ بِالْقَدَرِ خَيْرِهِ وَشَرِّهِ. والإحسانُ: أَنْ تَعْبُدَ اللهَ كَأَنَّكَ تَرَاهُ، فَإِنْ لَمْ تَكُنْ تَرَاهُ فإِنَّهُ يَرَاكَ. (حديث جبريل عليه السلام)`, narrator:"رواه مسلم", raw:"عن عمر رضي الله عنه"},
+{n:3, text:`بُنِيَ الإِسْلاَمُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لاَ إِلَهَ إِلاَّ اللهُ وَأَنَّ مُحَمَّدًا رَسُولُ اللهِ، وَإِقامِ الصَّلاَةِ، وإِيتَاءِ الزَّكَاةِ، وَحَجِّ البَيْتِ، وَصَوْمِ رَمَضَانَ.`, narrator:"رواه البخاري ومسلم", raw:"عن ابن عمر رضي الله عنهما"},
+{n:4, text:`إِنَّ أَحَدَكُمْ يُجْمَعُ خَلْقُهُ فِي بَطْنِ أُمِّهِ أَرْبَعِينَ يَوْمًا نُطْفَةً، ثُمَّ يَكُونُ عَلَقَةً مِثْلَ ذلِكَ، ثُمَّ يَكُونُ مُضْغَةً مِثْلَ ذلِكَ، ثمَّ يُرْسَلُ إلَيْهِ الْمَلَكُ فَيَنْفُخُ فيهِ الرُّوحَ، وَيُؤمَرُ بأرْبَعِ كَلِمَاتٍ: بِكَتْبِ رِزْقِهِ وَأَجَلِهِ وَعَمَلِهِ وَشَقِيٌّ أوْ سَعِيدٌ...`, narrator:"رواه البخاري ومسلم", raw:"عن ابن مسعود رضي الله عنه"},
+{n:5, text:`مَنْ أَحْدَثَ فِي أَمْرِنَا هَذَا مَا لَيْسَ مِنْهُ فَهُوَ رَدٌّ.`, narrator:"رواه البخاري ومسلم", raw:"عن عائشة رضي الله عنها"},
+{n:6, text:`إنَّ الحَلاَلَ بَيِّنٌ وَإِنَّ الْحَرَامَ بَيِّنٌ، وَبَيْنَهُما أُمُورٌ مُشْتَبِهَاتٌ لاَ يَعْلَمُهُنَّ كَثِيرٌ مِنَ النَّاسِ، فَمَنِ اتَّقَى الشُّبُهَاتِ فَقَدِ اسْتَبْرَأَ لِدِينِهِ وعِرْضِهِ، ومَنْ وَقَعَ فِي الشُّبُهَاتِ وَقَعَ فِي الْحَرَامِ... أَلاَ وَإِنَّ فِي الْجَسَدِ مُضْغَةً إِذَا صَلَحَتْ صَلَحَ الْجَسَدُ كُلُّهُ، وَإِذَا فَسَدَتْ فَسَدَ الْجَسَدُ كُلُّهُ، أَلاَ وهِيَ الْقَلْبُ.`, narrator:"رواه البخاري ومسلم", raw:"عن النعمان بن بشير رضي الله عنهما"},
+{n:7, text:`الدِّينُ النَّصِيحَةُ. قُلْنَا: لِمَنْ؟ قالَ: للهِ وَلِكِتَابِهِ وَلِرَسُولِهِ وَلأَِئِمَّةِ الْمُسْلِمِينَ وَعَامَّتِهِمْ.`, narrator:"رواه مسلم", raw:"عن تميم الداري رضي الله عنه"},
+{n:8, text:`أُمِرْتُ أَنْ أُقَاتِلَ النَّاسَ حَتَّى يَشْهَدُوا أَنْ لاَ إِلَهَ إِلاَّ اللهُ وَأَنَّ مُحَمَّدًا رَسُولُ اللهِ، وَيُقِيمُوا الصَّلاَةَ، وَيُؤْتُوا الزَّكَاةَ، فَإِذَا فَعَلُوا ذَلِكَ عَصَمُوا مِنِّي دِمَاءَهُمْ وَأَمْوَالَهُمْ إِلاَّ بِحَقِّ الإِسْلامِ، وَحِسَابُهُمْ عَلَى اللهِ تَعَالَى.`, narrator:"رواه البخاري ومسلم", raw:"عن ابن عمر رضي الله عنهما"},
+{n:9, text:`مَا نَهَيْتُكُمْ عَنْهُ فَاجْتَنِبُوهُ، وَمَا أَمَرْتُكُمْ بِهِ فَأْتُوا مِنْهُ مَا اسْتَطَعْتُمْ، فَإِنَّمَا أَهْلَكَ الَّذِينَ مِنْ قَبْلِكُمْ كَثْرَةُ مَسَائِلِهِمْ واخْتِلاَفُهُمْ عَلَى أَنْبِيَائِهِمْ.`, narrator:"رواه البخاري ومسلم", raw:"عن أبي هريرة رضي الله عنه"},
+{n:10, text:`إِنَّ اللهَ تَعَالَى طَيِّبٌ لاَ يَقْبَلُ إِلاَّ طَيِّبًا، وإِنَّ اللهَ أَمَرَ الْمُؤْمِنِينَ بِمَا أَمَرَ بِهِ الْمُرْسَلِينَ... ثُمَّ ذَكَرَ الرَّجُلَ يُطِيلُ السَّفَرَ أَشْعَثَ أَغْبَرَ، يَمُدُّ يَدَيْهِ إِلَى السَّماءِ يا رَبُّ يا رَبُّ، وَمَطْعَمُهُ حَرَامٌ، وَمَشْرَبُهُ حَرَامٌ، وَمَلْبَسُهُ حَرَامٌ، وَغُذِّيَ بِالْحَرَامِ، فَأَنَّى يُسْتَجَابُ لَهُ؟`, narrator:"رواه مسلم", raw:"عن أبي هريرة رضي الله عنه"},
+{n:11, text:`دَعْ مَا يَرِيبُكَ إِلَى مَا لاَ يَرِيبُكَ.`, narrator:"رواه الترمذي والنسائي، وقال الترمذي: حديث حسن صحيح", raw:"عن الحسن بن علي رضي الله عنهما"},
+{n:12, text:`مِنْ حُسْنِ إِسْلاَمِ الْمَرْءِ تَرْكُهُ مَا لاَ يَعْنِيهِ.`, narrator:"حديث حسن، رواه الترمذي وغيره", raw:"عن أبي هريرة رضي الله عنه"},
+{n:13, text:`لاَ يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لأَِخِيهِ مَا يُحِبُّ لِنَفْسِهِ.`, narrator:"رواه البخاري ومسلم", raw:"عن أنس بن مالك رضي الله عنه"},
+{n:14, text:`لاَ يَحِلُّ دَمُ امْرِئٍ مُسْلِمٍ يَشْهَدُ أَن لاَ إِلَهَ إِلاَّ اللهُ وأَنِّي رسُولُ اللهِ إِلاَّ بِإِحْدَى ثَلاَثٍ: الثَّيِّبِ الزَّانِي، وَالنَّفْسِ بِالنَّفْسِ، وَالتَّارِكِ لِدِينِهِ الْمُفَارِقِ لِلْجَمَاعَةِ.`, narrator:"رواه البخاري ومسلم", raw:"عن ابن مسعود رضي الله عنه"},
+{n:15, text:`مَنْ كَانَ يُؤْمِنُ بِاللهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ، وَمَنْ كَانَ يُؤْمِنُ بِاللهِ وَالْيَوْمِ الآخِرِ فَلْيُكْرِمْ جَارَهُ، وَمَنْ كَانَ يُؤْمِنُ بِاللهِ وَالْيَوْمِ الآخِرِ فَلْيُكْرِمْ ضَيْفَهُ.`, narrator:"رواه البخاري ومسلم", raw:"عن أبي هريرة رضي الله عنه"},
+{n:16, text:`لاَ تَغْضَبْ. (فردّدها مرارًا)`, narrator:"رواه البخاري", raw:"عن أبي هريرة رضي الله عنه"},
+{n:17, text:`إِنَّ اللهَ كَتَبَ الإِحْسَانَ عَلَى كُلِّ شَيْءٍ، فَإِذَا قَتَلْتُمْ فَأَحْسِنُوا الْقِتْلَةَ، وَإِذَا ذَبَحْتُمْ فَأَحْسِنُوا الذِّبْحَةَ، وَلْيُحِدَّ أَحَدُكُمْ شَفْرَتَهُ وَلْيُرِحْ ذَبِيحَتَهُ.`, narrator:"رواه مسلم", raw:"عن شداد بن أوس رضي الله عنه"},
+{n:18, text:`اتَّقِ اللهَ حَيْثُمَا كُنْتَ، وَأَتْبِعِ السَّيِّئَةَ الْحَسَنَةَ تَمْحُهَا، وَخَالِقِ النَّاسَ بِخُلُقٍ حَسَنٍ.`, narrator:"رواه الترمذي، وقال: حديث حسن", raw:"عن أبي ذر وأبي عبد الرحمن معاذ بن جبل رضي الله عنهما"},
+{n:19, text:`يَا غُلاَمُ، إِنِّي أُعَلِّمُكَ كَلِمَاتٍ: احْفَظِ اللهَ يَحْفَظْكَ، احْفَظِ اللهَ تَجِدْهُ تُجَاهَكَ، إِذَا سَأَلْتَ فَاسْأَلِ اللهَ، وَإِذَا اسْتَعَنْتَ فَاسْتَعِنْ بِاللهِ، وَاعْلَمْ أَنَّ الأُمَّةَ لَوِ اجْتَمَعَتْ عَلَى أَنْ يَنْفَعُوكَ بِشَيْءٍ لَمْ يَنْفَعُوكَ إِلاَّ بِشَيْءٍ قَدْ كَتَبَهُ اللهُ لَكَ... رُفِعَتِ الأَقْلاَمُ وَجَفَّتِ الصُّحُفُ.`, narrator:"رواه الترمذي، وقال: حديث حسن صحيح", raw:"عن ابن عباس رضي الله عنهما"},
+{n:20, text:`إِنَّ مِمَّا أَدْرَكَ النَّاسُ مِنْ كَلاَمِ النُّبُوَّةِ الأُولَى: إِذَا لَمْ تَسْتَحِ فَاصْنَعْ مَا شِئْتَ.`, narrator:"رواه البخاري", raw:"عن أبي مسعود عقبة بن عمرو رضي الله عنه"},
+{n:21, text:`قُلْ: آمَنْتُ بِاللهِ ثُمَّ اسْتَقِمْ.`, narrator:"رواه مسلم", raw:"عن سفيان بن عبد الله رضي الله عنه"},
+{n:22, text:`أَرَأَيْتَ إذا صَلَّيْتُ الْمَكْتُوباتِ، وَصُمْتُ رَمَضَانَ، وَأَحْلَلْتُ الْحَلالَ، وَحَرَّمْتُ الْحَرامَ، وَلَمْ أَزِدْ عَلَى ذلِكَ شَيْئًا، أَأَدْخُلُ الْجَنَّةَ؟ قالَ: نَعَمْ.`, narrator:"رواه مسلم", raw:"عن جابر بن عبد الله رضي الله عنهما"},
+{n:23, text:`الطُّـهُورُ شَطْرُ الإِيمَانِ، وَالْحَمْدُ للهِ تَمْلأُ الْمِيزَانَ، وَسُبْحَانَ اللهِ وَالْحَمْدُ للهِ تَمْلأُ مَا بَيْنَ السَّمَواتِ وَالأَرْضِ، وَالصَّلاَةُ نُورٌ، وَالصَّدَقَةُ بُرْهَانٌ، وَالصَّبْرُ ضِيَاءٌ، وَالْقُرْآنُ حُجَّةٌ لَكَ أَوْ عَلَيْكَ، كُلُّ النَّاسِ يَغْدُو؛ فَبَائِعٌ نَفْسَهُ فَمُعْتِقُهَا أَوْ مُوبِقُهَا.`, narrator:"رواه مسلم", raw:"عن أبي مالك الأشعري رضي الله عنه"},
+{n:24, text:`يَا عِبَادِي، إِنِّي حَرَّمْتُ الظُّلْمَ عَلَى نَفْسِي، وَجَعَلْتُهُ بَيْنَكُمْ مُحَرَّمًا فَلاَ تَظَالَمُوا. يَا عِبَادِي، كُلُّكُمْ ضَالٌّ إِلاَّ مَنْ هَدَيْتُهُ فَاسْتَهْدُونِي أَهْدِكُمْ. يَا عِبَادِي، كُلُّكُمْ جَائِعٌ إِلاَّ مَنْ أَطْعَمْتُهُ فَاسْتَطْعِمُونِي أُطْعِمْكُمْ... يَا عِبَادِي، إِنَّمَا هِيَ أَعْمَالُكُمْ أُحْصِيهَا لَكُمْ ثُمَّ أُوَفِّيكُمْ إِيَّاهَا، فَمَنْ وَجَدَ خَيْرًا فَلْيَحْمَدِ اللهَ، وَمَنْ وَجَدَ غَيْرَ ذَلِكَ فَلاَ يَلُومَنَّ إِلاَّ نَفْسَهُ. (حديث قدسي)`, narrator:"رواه مسلم", raw:"عن أبي ذر الغفاري رضي الله عنه"},
+{n:25, text:`أَوَلَيْسَ قَدْ جَعَلَ اللهُ لَكُمْ مَا تَصَدَّقُونَ؟ إِنَّ بِكُلِّ تَسْبِيحَةٍ صَدَقَةً، وَكُلِّ تَكْبِيرَةٍ صَدَقَةً، وَكُلِّ تَحْمِيدَةٍ صَدَقَةً، وَكُلِّ تَهْلِيلَةٍ صَدَقَةً، وَأمْرٌ بِالْمَعْرُوفِ صَدَقَةٌ، وَنَهْيٌ عَنْ مُنْكَرٍ صَدَقَةٌ، وَفِي بُضْعِ أَحَدِكُمْ صَدَقَةٌ.`, narrator:"رواه مسلم", raw:"عن أبي ذر رضي الله عنه"},
+{n:26, text:`كُلُّ سُلاَمَى مِنَ النَّاسِ عَلَيْهِ صَدَقَةٌ كُلَّ يَوْمٍ تَطْلُعُ فِيهِ الشَّمْسُ؛ تَعْدِلُ بَيْنَ اثْنَيْنِ صَدَقَةٌ، وَتُعِينُ الرَّجُلَ فِي دَابَّتِهِ صَدَقَةٌ، وَالْكَلِمَةُ الطَّيِّبَةُ صَدَقَةٌ، وَبِكُلِّ خُطْوَةٍ تَمْشِيهَا إِلَى الصَّلاَةِ صَدَقَةٌ، وَتُمِيطُ الأَذَى عَنِ الطَّرِيقِ صَدَقَةٌ.`, narrator:"رواه البخاري ومسلم", raw:"عن أبي هريرة رضي الله عنه"},
+{n:27, text:`الْبِرُّ حُسْنُ الْخُلُقِ، وَالإِثْمُ مَا حَاكَ فِي نَفْسِكَ وَكَرِهْتَ أنْ يَطَّلِعَ عليْهِ النَّاسُ. — اسْتَفْتِ قَلْبَكَ؛ الْبِرُّ مَا اطْمَأنَّتْ إِلَيْهِ النَّفْسُ وَاطْمَأنَّ إِلَيْهِ الْقَلْبُ، وَالإِثْمُ مَا حَاكَ فِي النَّفْسِ وَتَرَدَّدَ فِي الصَّدْرِ وَإِنْ أَفْتَاكَ النَّاسُ وَأَفْتَوْكَ.`, narrator:"حديث حسن، رواه أحمد والدارمي", raw:"عن النواس بن سمعان ووابصة بن معبد رضي الله عنهما"},
+{n:28, text:`أُوصِيكُمْ بِتَقْوَى اللهِ عَزَّ وَجَلَّ، وَالسَّمْعِ وَالطَّاعَةِ، وَإِنْ تَأَمَّرَ عَلَيْكُمْ عَبْدٌ حَبَشِيٌّ. فَإِنَّهُ مَنْ يَعِشْ مِنْكُمْ فَسَيَرَى اخْتِلاَفًا كَثِيرًا، فَعَلَيْكُمْ بِسُنَّتِي وَسُنَّةِ الْخُلَفَاءِ الرَّاشِدِينَ الْمَهْدِيِّينَ، تَمَسَّكُوا بِهَا وَعَضُّوا عَلَيْهَا بِالنَّوَاجِذِ، وَإِيَّاكُمْ وَمُحْدَثَاتِ الأُمُورِ، فَإِنَّ كُلَّ مُحْدَثَةٍ بِدْعَةٌ، وَكُلَّ بِدْعَةٍ ضَلاَلَةٌ.`, narrator:"رواه أبو داود والترمذي، وقال: حديث حسن صحيح", raw:"عن العرباض بن سارية رضي الله عنه"},
+{n:29, text:`تَعْبُدُ اللهَ لاَ تُشْرِكُ بِهِ شَيْئًا، وَتُقِيمُ الصَّلاَةَ، وَتُؤْتِي الزَّكَاةَ، وَتَصُومُ رَمَضَانَ، وَتَحُجُّ الْبَيْتَ... أَلاَ أُخْبِرُكَ بِرَأْسِ الأَمْرِ وَعَمُودِهِ وَذِرْوَةِ سَنَامِهِ؟ رَأْسُ الأَمْرِ الإِسْلاَمُ، وَعَمُودُهُ الصَّلاَةُ، وَذِرْوَةُ سَنَامِهِ الْجِهَادُ. ثُمَّ أَخَذَ بِلِسَانِهِ: كُفَّ عَلَيْكَ هَذَا... وَهَلْ يَكُبُّ النَّاسَ فِي النَّارِ عَلَى وُجُوهِهِمْ إِلاَّ حَصَائِدُ أَلْسِنَتِهِمْ؟`, narrator:"رواه الترمذي، وقال: حديث حسن صحيح", raw:"عن معاذ بن جبل رضي الله عنه"},
+{n:30, text:`إنَّ اللهَ تَعَالى فَرَضَ فَرَائِضَ فَلاَ تُضَيِّعُوهَا، وَحَدَّ حُدُودًا فَلاَ تَعْتَدُوهَا، وَحَرَّمَ أَشْيَاءَ فَلاَ تَنْتَهِكُوهَا، وَسَكَتَ عَنْ أَشْيَاءَ رَحْمَةً لَكُمْ غَيْرَ نِسْيَانٍ فَلاَ تَبْحَثُوا عَنْها.`, narrator:"حديث حسن، رواه الدارقطني وغيره", raw:"عن أبي ثعلبة الخشني رضي الله عنه"},
+{n:31, text:`ازْهَدْ فِي الدُّنْيَا يُحِبَّكَ اللهُ، وَازْهَدْ فِيمَا عِنْدَ النَّاسِ يُحِبَّكَ النَّاسُ.`, narrator:"حديث حسن، رواه ابن ماجه وغيره", raw:"عن سهل بن سعد الساعدي رضي الله عنه"},
+{n:32, text:`لاَ ضَرَرَ وَلاَ ضِرَارَ.`, narrator:"حديث حسن، رواه ابن ماجه والدارقطني ومالك في الموطأ", raw:"عن أبي سعيد الخدري رضي الله عنه"},
+{n:33, text:`لَوْ يُعْطَى النَّاسُ بِدَعْواهُمْ، لاَدَّعَى رِجَالٌ أَمْوَالَ قَوْمٍ وَدِمَاءَهُمْ، لَكِنِ الْبَيِّنَةُ عَلَى الْمُدَّعِي وَالْيَمِينُ عَلَى مَنْ أَنْكَرَ.`, narrator:"حديث حسن، رواه البيهقي وغيره وبعضه في الصحيحين", raw:"عن ابن عباس رضي الله عنهما"},
+{n:34, text:`مَنْ رَأَى مِنْكُمْ مُنْكَرًا فَلْيُغَيِّرْهُ بِيَدِهِ، فَإِنْ لَمْ يَسْتَطِعْ فَبِلِسَانِهِ، فَإِنْ لَمْ يَسْتَطِعْ فَبِقَلْبِهِ، وَذَلِكَ أَضْعَفُ الْإيمَانِ.`, narrator:"رواه مسلم", raw:"عن أبي سعيد الخدري رضي الله عنه"},
+{n:35, text:`لاَ تَحَاسَدُوا، وَلاَ تَنَاجَشُوا، وَلاَ تَبَاغَضُوا، وَلاَ تَدَابَرُوا، وَلاَ يَبِعْ بَعْضُكُم عَلَى بَيْعِ بَعْضٍ، وَكُونُوا عِبَادَ اللهِ إِخْوَانًا. المُسْلِمُ أَخُو المُسْلِمِ لاَ يَظْلِمُهُ، وَلاَ يَخْذُلُهُ، وَلاَ يَحْقِرُهُ. التَّقوَى هَهُنَا (ويشير إلى صدره). كُلُّ المُسْلِمِ عَلَى المُسْلِمِ حَرَامٌ: دَمُهُ وَمَالُهُ وعِرْضُهُ.`, narrator:"رواه مسلم", raw:"عن أبي هريرة رضي الله عنه"},
+{n:36, text:`مَنْ نَفَّسَ عَنْ مُؤْمِنٍ كُرْبَةً مِنْ كُرَبِ الدُّنْيَا نَفَّسَ اللهُ عَنْهُ كُرْبَةً مِنْ كُرَبِ يَوْمِ الْقِيَامَةِ، وَمَنْ يَسَّرَ عَلَى مُعْسِرٍ يَسَّرَ اللهُ عَلَيْهِ فِي الدُّنْيَا وَالْآخِرَةِ، وَمَنْ سَتَرَ مُسْلِمًا سَتَرَهُ اللهُ فِي الدُّنْيَا وَالآخِرَةِ، وَاللهُ فِي عَوْنِ الْعَبْدِ مَا كَانَ الْعَبْدُ فِي عَوْنِ أَخِيهِ، وَمَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ.`, narrator:"رواه مسلم", raw:"عن أبي هريرة رضي الله عنه"},
+{n:37, text:`إِنَّ اللهَ كَتَبَ الْحَسَنَاتِ وَالسَّيِّئَاتِ، ثُمَّ بَيَّنَ ذَلِكَ؛ فَمَنْ هَمَّ بِحَسَنةٍ فَلَمْ يَعْمَلْهَا كَتَبَهَا اللهُ عِنْدَهُ حَسَنَةً كَامِلَةً، وَإِنْ هَمَّ بِهَا فَعَمِلَهَا كَتَبَهَا اللهُ عَشْرَ حَسَنَاتٍ إِلَى سَبْعِمِائَةِ ضِعْفٍ، وَإِنْ هَمَّ بِسَيِّئَةٍ فَلَمْ يَعْمَلْها كَتَبَهَا اللهُ حَسَنَةً كَامِلَةً، وَإِنْ هَمَّ بِهَا فَعَمِلَهَا كَتَبَهَا اللهُ سَيِّئَةً وَاحِدَةً.`, narrator:"رواه البخاري ومسلم", raw:"عن ابن عباس رضي الله عنهما"},
+{n:38, text:`إِنَّ اللهَ تَعَالَى قَالَ: مَنْ عَادَى لِي وَلِيًّا فَقَدْ آذَنْتُهُ بِالْحَرْبِ. وَمَا تَقَرَّبَ إِلَيَّ عَبْدِي بِشَيْءٍ أَحَبَّ إِلَيَّ مِمَّا افْتَرَضْتُهُ عَلَيْهِ، وَلاَ يَزَالُ عَبْدِي يَتَقَرَّبُ إِلَيَّ بِالنَّوَافِلِ حَتَّى أُحِبَّهُ، فَإِذَا أَحْبَبْتُهُ كُنْتُ سَمْعَهُ الَّذِي يَسْمَعُ بِهِ وَبَصَرَهُ الَّذِي يُبْصِرُ بِهِ... وَلَئِنْ سَأَلَنِي لأُعْطِيَنَّهُ، وَلَئِنِ اسْتَعَاذَنِي لأُعِيذَنَّهُ. (حديث قدسي)`, narrator:"رواه البخاري", raw:"عن أبي هريرة رضي الله عنه"},
+{n:39, text:`إنَّ اللهَ تَجَاوَزَ لِي عَنْ أُمَّتِي: الْخَطَأَ، وَالنِّسْيَانَ، وَمَا اسْتُكْرِهُوا عَلَيْهِ.`, narrator:"حديث حسن، رواه ابن ماجه والبيهقي", raw:"عن ابن عباس رضي الله عنهما"},
+{n:40, text:`كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ أَوْ عَابِرُ سَبِيلٍ. (وكان ابن عمر يقول: إذا أمسيت فلا تنتظر الصباح، وإذا أصبحت فلا تنتظر المساء، وخذ من صحتك لمرضك، ومن حياتك لموتك)`, narrator:"رواه البخاري", raw:"عن ابن عمر رضي الله عنهما"},
+{n:41, text:`لاَ يُؤْمِنُ أَحَدُكُمْ حَتَّى يَكُونَ هَواهُ تَبَعًا لِمَا جِئْتُ بِهِ.`, narrator:"حديث حسن صحيح", raw:"عن عبد الله بن عمرو بن العاص رضي الله عنهما"},
+{n:42, text:`يَا ابْنَ آدَمَ، إِنَّكَ مَا دَعَوْتَنِي وَرَجَوْتَنِي غَفَرْتُ لَكَ عَلَى مَا كَانَ مِنْكَ وَلاَ أُبَالِي. يَا ابْنَ آدَمَ، لَوْ بَلَغَتْ ذُنُوبُكَ عَنَانَ السَّمَاءِ ثُمَّ اسْتَغْفَرْتَنِي غَفَرْتُ لَكَ. يَا ابْنَ آدَمَ، إِنَّكَ لَوْ أَتَيْتَنِي بِقُرَابِ الأَرْضِ خَطَايَا ثُمَّ لَقِيتَنِي لاَ تُشْرِكُ بِي شَيْئًا لأَتَيْتُكَ بِقُرَابِهَا مَغْفِرَةً. (حديث قدسي)`, narrator:"رواه الترمذي، وقال: حديث حسن صحيح", raw:"عن أنس بن مالك رضي الله عنه"},
+];
+
+const TABS = [
+  {key:"simple", icon:"📖", label:"شرح مبسّط"},
+  {key:"detailed", icon:"🔍", label:"شرح مفصّل"},
+  {key:"benefits", icon:"✨", label:"الفوائد"},
+  {key:"lessons", icon:"❤️", label:"العبر والدروس"},
+  {key:"words", icon:"📚", label:"كلمات صعبة"},
+  {key:"apply", icon:"🌱", label:"كيف أطبّقه؟"},
+  {key:"quiz", icon:"🧠", label:"اختبار قصير"},
+  {key:"weekly", icon:"📌", label:"عمل الأسبوع"},
+  {key:"audio", icon:"🎧", label:"استماع"},
+  {key:"refs", icon:"📑", label:"المراجع"},
+];
+
+/* ============ RENDER ============ */
+const mainList = document.getElementById('mainList');
+const indexGrid = document.getElementById('indexGrid');
+const doneSet = new Set(JSON.parse(localStorage.getItem('nawawi_done')||'[]'));
+
+hadiths.forEach(h=>{
+  // index panel link
+  const a = document.createElement('a');
+  a.href = '#hadith-'+h.n;
+  a.textContent = h.n;
+  if(doneSet.has(h.n)) a.classList.add('done');
+  a.id = 'idx-'+h.n;
+  a.addEventListener('click', ()=>toggleIndex(true));
+  indexGrid.appendChild(a);
+
+  // card
+  const card = document.createElement('article');
+  card.className = 'hadith-card reveal';
+  card.id = 'hadith-'+h.n;
+
+  const tabsHtml = TABS.map((t,i)=>`<button class="tab-btn${i===0?' active':''}" data-tab="${t.key}" data-n="${h.n}">${t.icon} ${t.label}</button>`).join('');
+
+  const panelsHtml = TABS.map((t,i)=>{
+    let inner = `<div class="placeholder">سيُضاف هذا القسم قريبًا — تابعونا للتحديثات.</div>`;
+    if(t.key==='refs'){
+      inner = `<ul><li><strong>الراوي:</strong> ${h.raw}</li><li><strong>التخريج:</strong> ${h.narrator}</li><li><strong>المصدر:</strong> متن الأربعين النووية للإمام النووي</li></ul>`;
+    }
+    if(t.key==='audio'){
+      inner = `<div class="audio-row"><audio controls><source src="" type="audio/mpeg">المتصفح لا يدعم الصوت.</audio><span class="placeholder" style="border:none;background:none;padding:0;">أضف رابط ملف صوتي لهذا الحديث لاحقًا.</span></div>`;
+    }
+    if(t.key==='quiz'){
+      inner = `<div class="placeholder">سيُضاف اختبار قصير (سؤال أو سؤالان) لهذا الحديث قريبًا.</div>`;
+    }
+    return `<div class="tab-panel${i===0?' active':''}" data-panel="${t.key}" data-n="${h.n}">${inner}</div>`;
+  }).join('');
+
+  card.innerHTML = `
+    <div class="card-head" data-n="${h.n}">
+      <div class="badge">${h.n}</div>
+      <div class="title">
+        <h3>الحديث ${h.n}</h3>
+        <span>${h.narrator}</span>
+      </div>
+      <div class="mark${doneSet.has(h.n)?' done':''}" data-mark="${h.n}" title="وضع علامة كمقروء">${doneSet.has(h.n)?'✓':''}</div>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="hadith-text">${h.text}<div class="narrator-line">${h.raw} — ${h.narrator}</div></div>
+        <div class="tabs">${tabsHtml}</div>
+        ${panelsHtml}
+      </div>
+    </div>
+  `;
+  mainList.appendChild(card);
+});
+
+updateStats();
+
+/* ---------- interactions ---------- */
+mainList.addEventListener('click', (e)=>{
+  const head = e.target.closest('.card-head');
+  const mark = e.target.closest('[data-mark]');
+  const tabBtn = e.target.closest('.tab-btn');
+
+  if(mark){
+    e.stopPropagation();
+    const n = parseInt(mark.dataset.mark);
+    if(doneSet.has(n)){ doneSet.delete(n); mark.classList.remove('done'); mark.textContent=''; document.getElementById('idx-'+n).classList.remove('done'); }
+    else{ doneSet.add(n); mark.classList.add('done'); mark.textContent='✓'; document.getElementById('idx-'+n).classList.add('done'); }
+    localStorage.setItem('nawawi_done', JSON.stringify([...doneSet]));
+    updateStats();
+    return;
+  }
+
+  if(tabBtn){
+    const n = tabBtn.dataset.n;
+    const key = tabBtn.dataset.tab;
+    const card = tabBtn.closest('.hadith-card');
+    card.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===key));
+    card.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active', p.dataset.panel===key));
+    return;
+  }
+
+  if(head){
+    const card = head.closest('.hadith-card');
+    const body = card.querySelector('.card-body');
+    const isOpen = card.classList.contains('open');
+    card.classList.toggle('open', !isOpen);
+    body.style.maxHeight = isOpen ? '0px' : (body.scrollHeight+40)+'px';
+  }
+});
+
+function updateStats(){
+  document.getElementById('readCount').textContent = doneSet.size;
+  document.getElementById('progressFill').style.width = Math.round(doneSet.size/42*100)+'%';
+}
+
+function jumpToHadith(){
+  const v = parseInt(document.getElementById('searchInput').value);
+  if(v>=1 && v<=42){
+    const card = document.getElementById('hadith-'+v);
+    card.classList.add('open');
+    const body = card.querySelector('.card-body');
+    body.style.maxHeight = (body.scrollHeight+40)+'px';
+    card.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+const overlay = document.getElementById('overlay');
+const indexPanel = document.getElementById('indexPanel');
+function toggleIndex(forceClose){
+  const willOpen = forceClose ? false : !indexPanel.classList.contains('open');
+  indexPanel.classList.toggle('open', willOpen);
+  overlay.classList.toggle('show', willOpen);
+}
+document.getElementById('menuBtn').addEventListener('click', ()=>toggleIndex());
+overlay.addEventListener('click', ()=>toggleIndex(true));
+
+/* reveal on scroll */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* to top button */
+const toTop = document.getElementById('toTop');
+window.addEventListener('scroll', ()=>{
+  toTop.classList.toggle('show', window.scrollY > 500);
+});
+
+/* ================= HERO: interactive canvas dust + parallax mandala + typewriter + count-up ================= */
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---- floating golden dust particles, reacting to the pointer ---- */
+(function heroParticles(){
+  const hero = document.getElementById('hero');
+  const canvas = document.getElementById('heroCanvas');
+  if(!hero || !canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [];
+  const mouse = {x:null, y:null};
+
+  function resize(){
+    w = canvas.width = hero.offsetWidth;
+    h = canvas.height = hero.offsetHeight;
+  }
+  function makeParticles(){
+    const count = reduceMotion ? 18 : Math.min(85, Math.max(30, Math.round(w/16)));
+    particles = Array.from({length:count}, ()=>({
+      x:Math.random()*w, y:Math.random()*h,
+      r:Math.random()*1.7+0.5,
+      vy:-(Math.random()*0.32+0.06),
+      vx:(Math.random()-0.5)*0.12,
+      a:Math.random()*0.5+0.15,
+      tw:Math.random()*Math.PI*2
+    }));
+  }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+      p.tw += 0.018;
+      const flicker = 0.55 + Math.sin(p.tw)*0.4;
+      p.y += p.vy; p.x += p.vx;
+      if(mouse.x!==null){
+        const dx=p.x-mouse.x, dy=p.y-mouse.y, d2=dx*dx+dy*dy;
+        if(d2<11000){ const f=(11000-d2)/11000*0.55; p.x+=dx*0.012*f; p.y+=dy*0.012*f; }
+      }
+      if(p.y<-8){ p.y=h+8; p.x=Math.random()*w; }
+      if(p.x<-8) p.x=w+8;
+      if(p.x>w+8) p.x=-8;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(227,205,157,${(p.a*flicker).toFixed(3)})`;
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+    });
+    if(!reduceMotion) requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', ()=>{ resize(); makeParticles(); });
+  hero.addEventListener('mousemove', e=>{
+    const rect = hero.getBoundingClientRect();
+    mouse.x = e.clientX-rect.left; mouse.y = e.clientY-rect.top;
+  });
+  hero.addEventListener('mouseleave', ()=>{ mouse.x=null; mouse.y=null; });
+  resize(); makeParticles();
+  if(reduceMotion){ draw(); } else { requestAnimationFrame(draw); }
+})();
+
+/* ---- procedurally generated 8-point Islamic rosette (signature visual) ---- */
+(function buildMandala(){
+  const holder = document.getElementById('mandalaSpin');
+  if(!holder) return;
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS,"svg");
+  svg.setAttribute("viewBox","0 0 400 400");
+  const cx=200, cy=200;
+
+  for(let ring=0; ring<3; ring++){
+    const r = 55 + ring*58;
+    const points = 8;
+    let d = "";
+    for(let i=0;i<=points;i++){
+      const a1 = (i/points)*2*Math.PI;
+      const a2 = ((i+0.5)/points)*2*Math.PI;
+      const x1 = cx + r*Math.cos(a1), y1 = cy + r*Math.sin(a1);
+      const x2 = cx + (r*0.55)*Math.cos(a2), y2 = cy + (r*0.55)*Math.sin(a2);
+      d += (i===0?"M":"L") + x1.toFixed(1)+","+y1.toFixed(1) + " L" + x2.toFixed(1)+","+y2.toFixed(1) + " ";
+    }
+    d += "Z";
+    const path = document.createElementNS(svgNS,"path");
+    path.setAttribute("d", d);
+    path.setAttribute("fill","none");
+    path.setAttribute("stroke","#e3cd9d");
+    path.setAttribute("stroke-width", (1.3 - ring*0.25).toFixed(2));
+    path.setAttribute("opacity", (0.5 - ring*0.11).toFixed(2));
+    svg.appendChild(path);
+  }
+  for(let i=0;i<8;i++){
+    const a = (i/8)*2*Math.PI;
+    const circle = document.createElementNS(svgNS,"circle");
+    circle.setAttribute("cx", (cx+42*Math.cos(a)).toFixed(1));
+    circle.setAttribute("cy", (cy+42*Math.sin(a)).toFixed(1));
+    circle.setAttribute("r", 36);
+    circle.setAttribute("fill","none");
+    circle.setAttribute("stroke","#e3cd9d");
+    circle.setAttribute("stroke-width",0.8);
+    circle.setAttribute("opacity",0.32);
+    svg.appendChild(circle);
+  }
+  const center = document.createElementNS(svgNS,"circle");
+  center.setAttribute("cx",cx); center.setAttribute("cy",cy); center.setAttribute("r",36);
+  center.setAttribute("fill","none"); center.setAttribute("stroke","#e3cd9d");
+  center.setAttribute("stroke-width",1); center.setAttribute("opacity",0.45);
+  svg.appendChild(center);
+
+  holder.appendChild(svg);
+
+  /* gentle parallax tilt following the pointer */
+  const hero = document.getElementById('hero');
+  const wrap = document.getElementById('mandalaWrap');
+  if(hero && wrap && !reduceMotion){
+    hero.addEventListener('mousemove', e=>{
+      const rect = hero.getBoundingClientRect();
+      const relX = (e.clientX-rect.left)/rect.width - 0.5;
+      const relY = (e.clientY-rect.top)/rect.height - 0.5;
+      wrap.style.transform = `translate(-50%,-50%) translate(${(relX*26).toFixed(1)}px, ${(relY*18).toFixed(1)}px) rotate(${(relX*5).toFixed(1)}deg)`;
+    });
+    hero.addEventListener('mouseleave', ()=>{ wrap.style.transform = 'translate(-50%,-50%)'; });
+  }
+})();
+
+/* ---- typewriter cycling through the pillars this site covers ---- */
+(function typewriter(){
+  const target = document.getElementById('typeTarget');
+  if(!target) return;
+  const words = ["النية الصادقة", "الإيمان الكامل", "الإحسان في العمل", "حسن الخلق", "الصدق والأمانة", "التطبيق في الحياة اليومية"];
+  if(reduceMotion){ target.textContent = words[0]; return; }
+  let wi=0, ci=0, deleting=false;
+  function tick(){
+    const word = words[wi];
+    if(!deleting){
+      ci++; target.textContent = word.slice(0,ci);
+      if(ci===word.length){ deleting=true; return setTimeout(tick, 1500); }
+    } else {
+      ci--; target.textContent = word.slice(0,ci);
+      if(ci===0){ deleting=false; wi=(wi+1)%words.length; }
+    }
+    setTimeout(tick, deleting?35:65);
+  }
+  tick();
+})();
+
+/* ---- animated count-up for the static hero stats ---- */
+(function countUp(){
+  const nums = document.querySelectorAll('.stat-chip .num[data-count]');
+  if(!nums.length) return;
+  function animate(el){
+    const to = parseInt(el.dataset.count, 10);
+    if(reduceMotion){ el.textContent = to; return; }
+    const dur = 1200, start = performance.now();
+    function step(now){
+      const p = Math.min((now-start)/dur, 1);
+      const eased = 1-Math.pow(1-p,3);
+      el.textContent = Math.round(eased*to);
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(en=>{ if(en.isIntersecting){ animate(en.target); obs.unobserve(en.target); } });
+  },{threshold:0.4});
+  nums.forEach(n=>obs.observe(n));
+})();
+</script>
+</body>
+</html>
