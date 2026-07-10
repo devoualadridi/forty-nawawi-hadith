@@ -46,15 +46,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 </div>
 
-<ul class="nav-links">
+<ul class="nav-links" id="navLinks">
 
-<li><a href="#">الرئيسية</a></li>
+<li><a href="#" class="nav-link-item">الرئيسية</a></li>
 
-<li><a href="#features">المميزات</a></li>
+<li><a href="#features" class="nav-link-item">المميزات</a></li>
 
-<li><a href="#journey">الرحلة</a></li>
+<li><a href="#journey" class="nav-link-item">الرحلة</a></li>
 
-<li><a href="#about">حول</a></li>
+<li><a href="#about" class="nav-link-item">حول</a></li>
 
 </ul>
 
@@ -72,11 +72,21 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 </button>
 
+<!-- زر قائمة الهاتف (Hamburger) -->
+<button id="menuToggleBtn" class="menu-toggle" aria-label="فتح القائمة" aria-expanded="false">
+
+<i class="fa-solid fa-bars"></i>
+
+</button>
+
 </div>
 
 </nav>
 
 </header>
+
+<!-- طبقة معتمة تظهر خلف قائمة الهاتف عند فتحها -->
+<div class="nav-overlay" id="navOverlay"></div>
 
 <!-- ===================== -->
 <!-- HERO -->
@@ -181,7 +191,20 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <!-- ===================== -->
 <!-- Profile Drawer -->
 <!-- ===================== -->
+
+<!-- طبقة معتمة تظهر خلف نافذة البروفايل، النقر عليها يغلقها -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
 <div class="profile-drawer" id="drawer">
+
+    <!-- زر الرجوع/الإغلاق: يرجع المستخدم للصفحة الرئيسية -->
+    <button class="drawer-close" id="drawerCloseBtn" aria-label="الرجوع للصفحة الرئيسية">
+
+        <i class="fa-solid fa-arrow-right"></i>
+
+        <span>رجوع</span>
+
+    </button>
 
     <div class="drawer-header">
 
@@ -617,6 +640,87 @@ Designed & Developed by
 </footer>
 
 <script src="script.js"></script>
+
+<!-- ===================== -->
+<!-- Mobile menu + Drawer close logic -->
+<!-- (منطق قائمة الهاتف وزر الرجوع من البروفايل) -->
+<!-- ===================== -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  const menuToggleBtn = document.getElementById('menuToggleBtn');
+  const navLinks       = document.getElementById('navLinks');
+  const navOverlay     = document.getElementById('navOverlay');
+  const navLinkItems   = document.querySelectorAll('.nav-link-item');
+
+  function openMenu() {
+    navLinks.classList.add('active');
+    navOverlay.classList.add('active');
+    menuToggleBtn.setAttribute('aria-expanded', 'true');
+    menuToggleBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+  }
+
+  function closeMenu() {
+    navLinks.classList.remove('active');
+    navOverlay.classList.remove('active');
+    menuToggleBtn.setAttribute('aria-expanded', 'false');
+    menuToggleBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+  }
+
+  if (menuToggleBtn) {
+    menuToggleBtn.addEventListener('click', function () {
+      if (navLinks.classList.contains('active')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+  }
+
+  // إغلاق القائمة عند الضغط على الطبقة المعتمة
+  if (navOverlay) {
+    navOverlay.addEventListener('click', closeMenu);
+  }
+
+  // إغلاق القائمة تلقائياً عند اختيار رابط
+  navLinkItems.forEach(function (link) {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // ===== Profile Drawer =====
+  const profileBtn    = document.getElementById('profileBtn');
+  const drawer         = document.getElementById('drawer');
+  const drawerOverlay  = document.getElementById('drawerOverlay');
+  const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+
+  function openDrawer() {
+    drawer.classList.add('active');
+    drawerOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('active');
+    drawerOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  if (profileBtn) {
+    profileBtn.addEventListener('click', openDrawer);
+  }
+
+  // زر "رجوع" داخل البروفايل يرجع للصفحة الرئيسية
+  if (drawerCloseBtn) {
+    drawerCloseBtn.addEventListener('click', closeDrawer);
+  }
+
+  // الضغط خارج البروفايل يغلقه أيضاً
+  if (drawerOverlay) {
+    drawerOverlay.addEventListener('click', closeDrawer);
+  }
+
+});
+</script>
 
 </body>
 
